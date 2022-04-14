@@ -6,9 +6,8 @@
 		<div th:replace="~{base::titulo('Importar Transação')}" ></div>
 
 		<div class="card mt-3">
-			<form th:object="${requestImportTransaction}" class="card-body"
-				action="/importTransaction/new" method="POST">
-				<div class="form-group">
+			 <form method="post" th:action="@{upload}" enctype="multipart/form-data">
+              		<div class="form-group">
 					<div class="form-group">
                         <input type="file" name="file" class="form-control-file">
                     </div>

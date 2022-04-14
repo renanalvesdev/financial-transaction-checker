@@ -8,6 +8,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.renanlabs.mvc.financialtransactionchecker.dto.RequestImportTransaction;
 import br.com.renanlabs.mvc.financialtransactionchecker.model.ImportTransaction;
@@ -38,4 +41,26 @@ public class ImportTransactionController {
 		return "redirect:/home";
 	}
 	
-}
+	 @PostMapping("upload")
+	    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes attributes) {
+
+	        // check if file is empty
+	        if (file.isEmpty()) {
+	            attributes.addFlashAttribute("message", "Please select a file to upload.");
+	            return "redirect:/";
+	        }
+
+	        // getting file name and size in MB
+	        String fileName = file.getOriginalFilename();
+	        String fileSize = String.valueOf(file.getSize()/(1024*1024));
+	        
+	        System.out.println("File name: " + fileName + " | File size (MB): " + fileSize);
+
+	        // return success response
+	        attributes.addFlashAttribute("message", "You successfully uploaded " + fileName + '!');
+
+	        return "redirect:/importTransaction/form";
+	    }
+
+	}
+
