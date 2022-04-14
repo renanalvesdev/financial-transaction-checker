@@ -1,5 +1,7 @@
 package br.com.renanlabs.mvc.financialtransactionchecker.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.renanlabs.mvc.financialtransactionchecker.dto.RequestImportTransaction;
 import br.com.renanlabs.mvc.financialtransactionchecker.model.ImportTransaction;
 import br.com.renanlabs.mvc.financialtransactionchecker.repository.ImportTransactionRepository;
+import br.com.renanlabs.mvc.financialtransactionchecker.service.CSVReader;
 
 @Controller
 @RequestMapping("importTransaction")
@@ -55,6 +58,10 @@ public class ImportTransactionController {
 	        String fileSize = String.valueOf(file.getSize()/(1024*1024));
 	        
 	        System.out.println("File name: " + fileName + " | File size (MB): " + fileSize);
+	        
+	        List<List<String>> records = new CSVReader(file).records();
+	        System.out.println("Lines of file: "); 
+	        records.forEach(r -> System.out.println(r));
 
 	        // return success response
 	        attributes.addFlashAttribute("message", "You successfully uploaded " + fileName + '!');

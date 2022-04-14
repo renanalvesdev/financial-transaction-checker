@@ -1,25 +1,36 @@
 package br.com.renanlabs.mvc.financialtransactionchecker.service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public class CSVReader {
 
 	static final String COMMA_DELIMITER = ",";
 	
-	private File file;
+	private InputStream file;
 
 	public CSVReader() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CSVReader(File file) {
+	public CSVReader(InputStream file) {
 		this.file = file;
 	}
 
+	public CSVReader(MultipartFile file) {
+		try {
+			this.file = file.getInputStream();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public List<List<String>> records(){
 		
 		List<List<String>> records = new ArrayList<>();
@@ -28,10 +39,7 @@ public class CSVReader {
 		    while (scanner.hasNextLine()) {
 		        records.add(getRecordFromLine(scanner.nextLine()));
 		    }
-		} catch (FileNotFoundException e) {
-			System.out.println("Erro ao ler o arquivo: " + e.getMessage());
-		}
-		
+		} 		
 		return records;
 	}
 
