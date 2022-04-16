@@ -1,7 +1,6 @@
 package br.com.renanlabs.mvc.financialtransactionchecker.service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,8 +24,6 @@ public class TransactionBuilderFromCSV {
 
 	private static final int AMOUNT_POSITION = 6;
 	private static final int DATE_POSITION = 7;
-
-	private InputStream file;
 
 	private LocalDate day;
 
@@ -59,7 +56,13 @@ public class TransactionBuilderFromCSV {
 
 	// return true if validations are true for set transaction as valid
 	private boolean isTransactionValid(List<String> transaction) {
-		return isValidDate(transaction.get(DATE_POSITION)) && isAllFieldsFilled(transaction);
+		
+		if (!isValidDate(transaction.get(DATE_POSITION)) && isAllFieldsFilled(transaction)) {
+			System.out.println("Invalid -> " + transaction);
+			return false;
+		}
+		
+		return true;
 	}
 
 	// valid date if is same as day of transactions import(filled)

@@ -14,10 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.renanlabs.mvc.financialtransactionchecker.dto.RequestImportTransaction;
 import br.com.renanlabs.mvc.financialtransactionchecker.model.FinancialTransaction;
-import br.com.renanlabs.mvc.financialtransactionchecker.model.FinancialTransactionImport;
 import br.com.renanlabs.mvc.financialtransactionchecker.repository.FinancialTransactionRepository;
 import br.com.renanlabs.mvc.financialtransactionchecker.service.FinancialTransactionImportService;
-import br.com.renanlabs.mvc.financialtransactionchecker.service.TransactionBuilderFromCSV;
 
 @Controller
 @RequestMapping("importTransaction")
@@ -55,34 +53,18 @@ public class ImportTransactionController {
 	        // check if file is empty
 	        if (file.isEmpty()) {
 	            attributes.addFlashAttribute("message", "Please select a file to upload.");
-	            return "redirect:/";
 	        }
 
-	        // getting file name and size in MB
-	        String fileName = file.getOriginalFilename();
-	        String fileSize = String.valueOf(file.getSize()/(1024*1024));
-	        
-	        System.out.println("File name: " + fileName + " | File size (MB): " + fileSize);
-	        
-	        //building transactions from csv file
-	        TransactionBuilderFromCSV tb = new TransactionBuilderFromCSV(file);
-	        
-	       FinancialTransactionImport financialTransactionImportOfDay = transactionImportService.findByTransactionDate(tb.findDateFromFinancialTransactionImport());
-	      
-	       if(financialTransactionImportOfDay != null) {
-	    	   System.out.println("A import for date was already registered in database");
-	    	   return "";
-	       }
-	        
-	       tb.build();
-	       
-	       transactionImportService.save(tb.getFinancialTransactionImport());
-	        System.out.println("Import information: " + tb.getFinancialTransactionImport());
-	        System.out.println("Transactions information : " + tb.getValidFinancialTransactions() );
-	        
-	        // return success response
-	        attributes.addFlashAttribute("message", "You successfully uploaded " + fileName + '!');
+	        try {
+	        	//building transactions from csv file
+		        transactionImportService.doImport(file);
+		        // return success response
+		        attributes.addFlashAttribute("message", "File sucessful uploaded !!");
 
+			} catch (Exception e) {
+				System.out.println("Error: " + e.getMessage());
+			}
+	       
 	        return "redirect:/importTransaction/form";
 	    }
 

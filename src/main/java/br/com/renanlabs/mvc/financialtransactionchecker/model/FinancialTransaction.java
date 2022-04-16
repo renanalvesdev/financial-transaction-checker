@@ -3,9 +3,12 @@ package br.com.renanlabs.mvc.financialtransactionchecker.model;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class FinancialTransaction {
@@ -24,6 +27,11 @@ public class FinancialTransaction {
 	private Double amount;
 	
 	private LocalDateTime date;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "financial_transaction_import_id")
+    private FinancialTransactionImport financialTransactionImport;
+	
 
 	public Long getId() {
 		return id;
@@ -95,6 +103,14 @@ public class FinancialTransaction {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+
+	public FinancialTransactionImport getFinancialTransactionImport() {
+		return financialTransactionImport;
+	}
+
+	public void setFinancialTransactionImport(FinancialTransactionImport financialTransactionImport) {
+		this.financialTransactionImport = financialTransactionImport;
 	}
 
 	
