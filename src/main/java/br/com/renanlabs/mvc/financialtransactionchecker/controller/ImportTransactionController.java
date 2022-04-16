@@ -1,7 +1,5 @@
 package br.com.renanlabs.mvc.financialtransactionchecker.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +13,22 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.renanlabs.mvc.financialtransactionchecker.dto.RequestImportTransaction;
-import br.com.renanlabs.mvc.financialtransactionchecker.model.ImportTransaction;
-import br.com.renanlabs.mvc.financialtransactionchecker.repository.ImportTransactionRepository;
-import br.com.renanlabs.mvc.financialtransactionchecker.service.CSVReader;
+import br.com.renanlabs.mvc.financialtransactionchecker.model.FinancialTransaction;
+import br.com.renanlabs.mvc.financialtransactionchecker.repository.FinancialTransactionRepository;
+import br.com.renanlabs.mvc.financialtransactionchecker.service.FinancialTransactionImportService;
+import br.com.renanlabs.mvc.financialtransactionchecker.service.TransactionBuilderFromCSV;
 
 @Controller
 @RequestMapping("importTransaction")
 public class ImportTransactionController {
 	
 	@Autowired
-	private ImportTransactionRepository importTransactionRepository;
+	private FinancialTransactionRepository importTransactionRepository;
+	
+
+	@Autowired
+	private FinancialTransactionImportService transactionImportService;
+
 
 	@GetMapping("form")
 	public String form(RequestImportTransaction requisicao) {
@@ -38,7 +42,7 @@ public class ImportTransactionController {
 			return "importTransaction/form";
 		}
 		
-		ImportTransaction importTransactionFile = requisicao.toImport();
+		FinancialTransaction importTransactionFile = requisicao.toImport();
 		importTransactionRepository.save(importTransactionFile);
 		
 		return "redirect:/home";
@@ -59,10 +63,17 @@ public class ImportTransactionController {
 	        
 	        System.out.println("File name: " + fileName + " | File size (MB): " + fileSize);
 	        
-	        List<List<String>> records = new CSVReader(file).records();
-	        System.out.println("Lines of file: "); 
-	        records.forEach(r -> System.out.println(r));
-
+	        //building transactions from csv file
+	        TransactionBuilderFromCSV tb = new TransactionBuilderFromCSV(file);
+	        
+	       if( transactionImportService.findByTransactionDate(tb.findDateFromFinancialTransactionImport()).isEmpty()) {
+	    	   tb.build();
+	    	   System.out.println("oi" + tb.getValidFinancialTransactions());
+	       }
+	        
+	        System.out.println("Import information: " + tb.getFinancialTransactionImport());
+	        System.out.println("Transactions information : " + tb.getValidFinancialTransactions() );
+	        
 	        // return success response
 	        attributes.addFlashAttribute("message", "You successfully uploaded " + fileName + '!');
 

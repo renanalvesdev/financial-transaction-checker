@@ -2,15 +2,15 @@ package br.com.renanlabs.mvc.financialtransactionchecker.dto;
 
 import java.time.LocalDateTime;
 
-import br.com.renanlabs.mvc.financialtransactionchecker.model.ImportTransaction;
+import br.com.renanlabs.mvc.financialtransactionchecker.model.FinancialTransaction;
 
 public class RequestImportTransaction {
 
 	private LocalDateTime date;
 	
-	public ImportTransaction toImport() {
+	public FinancialTransaction toImport() {
 		
-		ImportTransaction importFile = new ImportTransaction();
+		FinancialTransaction importFile = new FinancialTransaction();
 		importFile.setDate(date);
 		
 		return importFile;

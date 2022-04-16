@@ -1,12 +1,9 @@
 package br.com.renanlabs.mvc.financialtransactionchecker.service;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import org.springframework.web.multipart.MultipartFile;
 
 public class CSVReader {
 
@@ -20,15 +17,6 @@ public class CSVReader {
 
 	public CSVReader(InputStream file) {
 		this.file = file;
-	}
-
-	public CSVReader(MultipartFile file) {
-		try {
-			this.file = file.getInputStream();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public List<List<String>> records(){
