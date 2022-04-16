@@ -4,12 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.renanlabs.mvc.financialtransactionchecker.model.FinancialTransaction;
@@ -51,6 +48,9 @@ public class TransactionBuilderFromCSV {
 
 	public void build() {
 
+		financialTransactionImport.setTransactionDate(day);
+		financialTransactionImport.setDate(LocalDateTime.now());
+		
 		validFinancialTransactions = records.stream()
 				.filter(r -> isTransactionValid(r))
 				.map(r -> CSVToFinancialTransaction(r))
@@ -89,15 +89,6 @@ public class TransactionBuilderFromCSV {
 		return financialTransaction;
 	}
 
-	public FinancialTransactionImport getFinancialTransactionImport() {
-		return financialTransactionImport;
-	}
-
-	public List<FinancialTransaction> getValidFinancialTransactions() {
-		return validFinancialTransactions;
-	}
-	
-	
 	public LocalDate findDateFromFinancialTransactionImport() {
 
 		day = records
@@ -110,7 +101,18 @@ public class TransactionBuilderFromCSV {
 		System.out.println(day);
 		return day;
 	}
-	
+
+	public FinancialTransactionImport getFinancialTransactionImport() {
+		return financialTransactionImport;
+	}
+
+	public List<FinancialTransaction> getValidFinancialTransactions() {
+		return validFinancialTransactions;
+	}
+
+	public LocalDate getDay() {
+		return day;
+	}
 	
 	
 }

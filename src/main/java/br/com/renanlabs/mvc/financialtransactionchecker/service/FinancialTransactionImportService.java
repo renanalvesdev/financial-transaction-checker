@@ -2,6 +2,7 @@ package br.com.renanlabs.mvc.financialtransactionchecker.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class FinancialTransactionImportService {
 		return transactionImportRepository.findAll();
 	}
 	
-	public List<FinancialTransactionImport> findByTransactionDate(LocalDate date) {
-		return transactionImportRepository.findByTransactionDate(date);
+	public FinancialTransactionImport findByTransactionDate(LocalDate date) {
+		return transactionImportRepository.findByTransactionDate(date).stream().findFirst().orElse(null);
 	}
 }

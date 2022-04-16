@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.renanlabs.mvc.financialtransactionchecker.dto.RequestImportTransaction;
 import br.com.renanlabs.mvc.financialtransactionchecker.model.FinancialTransaction;
+import br.com.renanlabs.mvc.financialtransactionchecker.model.FinancialTransactionImport;
 import br.com.renanlabs.mvc.financialtransactionchecker.repository.FinancialTransactionRepository;
 import br.com.renanlabs.mvc.financialtransactionchecker.service.FinancialTransactionImportService;
 import br.com.renanlabs.mvc.financialtransactionchecker.service.TransactionBuilderFromCSV;
@@ -66,11 +67,16 @@ public class ImportTransactionController {
 	        //building transactions from csv file
 	        TransactionBuilderFromCSV tb = new TransactionBuilderFromCSV(file);
 	        
-	       if( transactionImportService.findByTransactionDate(tb.findDateFromFinancialTransactionImport()).isEmpty()) {
-	    	   tb.build();
-	    	   System.out.println("oi" + tb.getValidFinancialTransactions());
+	       FinancialTransactionImport financialTransactionImportOfDay = transactionImportService.findByTransactionDate(tb.findDateFromFinancialTransactionImport());
+	      
+	       if(financialTransactionImportOfDay != null) {
+	    	   System.out.println("A import for date was already registered in database");
+	    	   return "";
 	       }
 	        
+	       tb.build();
+	       
+	       transactionImportService.save(tb.getFinancialTransactionImport());
 	        System.out.println("Import information: " + tb.getFinancialTransactionImport());
 	        System.out.println("Transactions information : " + tb.getValidFinancialTransactions() );
 	        
