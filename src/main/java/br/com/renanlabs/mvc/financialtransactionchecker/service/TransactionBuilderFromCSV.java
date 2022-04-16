@@ -36,7 +36,7 @@ public class TransactionBuilderFromCSV {
 	public TransactionBuilderFromCSV(MultipartFile file) {
 		try {
 			 records = new CSVReader(file.getInputStream()).records();
-			financialTransactionImport = new FinancialTransactionImport(file.getSize(), file.getName());
+			financialTransactionImport = new FinancialTransactionImport(file.getSize(), file.getOriginalFilename());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

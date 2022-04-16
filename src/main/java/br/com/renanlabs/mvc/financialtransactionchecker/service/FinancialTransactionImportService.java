@@ -38,7 +38,7 @@ public class FinancialTransactionImportService {
 	    FinancialTransactionImport financialTransactionImportOfDay = findByTransactionDate(tb.findDateFromFinancialTransactionImport());
 	   
 	    if(financialTransactionImportOfDay != null) {
-	    	throw new RuntimeException("A import for date was already registered in database");
+	    	throw new RuntimeException("A import for date [ " + tb.getDay() +" ] was already registered in database");
 	    }
 	    
 	    //id not, initialize importation routine
