@@ -1,0 +1,34 @@
+<html>
+<head th:replace="~{base::head}">
+
+</head>
+
+<body>
+	<div th:replace="~{base :: logo}" />
+	<div class="container">
+		<div th:replace="~{base::titulo('Users')}"></div>
+
+		<a href="/user/form"><button class="btn btn-outline-secondary my-2 my-sm-0">Novo</button></a>
+		
+		<table class="table table-striped  table-bordered">
+				    <thead>
+				        <tr>
+				            <th scope="col"> Name </th>
+				            <th scope="col"> E-mail</th>
+				            <th scope="col"> Actions </th>
+				        </tr>
+				    </thead>
+				    <tbody>
+						<tr th:if="${users.empty}">
+				            <td colspan="2"> No user registered yet. </td>
+				        </tr>
+				        <tr  th:each="user : ${users}">
+				            <td><span th:text="${user.name}"> Name</span></td>
+				            <td><span th:text="${user.email}"> E-mail</span></td>
+				            <td><a th:href="@{/user/form/edit/{id}(id=${user.id})}">Edit</a></td></td>
+				        </tr>
+				    </tbody>
+				</table>
+	</div>
+</body>
+</html>

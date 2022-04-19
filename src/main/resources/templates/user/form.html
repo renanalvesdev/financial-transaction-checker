@@ -1,0 +1,37 @@
+<html>
+<head th:replace="~{base::head}">
+
+</head>
+<body>
+	<div class="container">
+		<div th:replace="~{base::titulo('User')}"></div>
+
+		<div class="card mt-3">
+			<form th:object="${requestUser}" class="card-body"
+				action="/user/save" method="POST">
+
+				<div class="form-group">
+					<input type="hidden" th:field="*{id}" id="id" name="id">
+				</div>
+
+				<div class="form-group">
+					<label for="name">Name</label>
+					<textarea class="form-control" name="name"
+						th:field="*{name}"
+						placeholder="Insert User Name"></textarea>
+				</div>
+				
+				<div class="form-group">
+					<label for="email">E-mail</label>
+					<textarea class="form-control" name="email"
+						th:field="*{email}"
+						placeholder="Insert User E-mail">
+					</textarea>
+				</div>
+
+				<button class="btn btn-primary" type="submit">Save</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
