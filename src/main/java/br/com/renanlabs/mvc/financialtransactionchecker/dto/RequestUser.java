@@ -21,14 +21,12 @@ public class RequestUser {
 
 	// converting User to RequestUser
 	public RequestUser(User user) {
-		this.id = user.getId();
 		this.name = user.getName();
 		this.email = user.getEmail();
 	}
 
 	public User toUser() {
 		User user = new User();
-		user.setId(id);
 		user.setName(name);
 		user.setEmail(email);
 		return user;

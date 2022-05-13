@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class FinancialTransactionImport {
@@ -23,6 +25,9 @@ public class FinancialTransactionImport {
 	private LocalDate transactionDate;
 
 	private String fileName;
+	
+	@ManyToOne(fetch = FetchType.LAZY) 
+	private User user;
 
 	public FinancialTransactionImport() {
 
@@ -72,6 +77,16 @@ public class FinancialTransactionImport {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override

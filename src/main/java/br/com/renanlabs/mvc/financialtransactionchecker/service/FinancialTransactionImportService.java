@@ -4,18 +4,24 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.renanlabs.mvc.financialtransactionchecker.model.FinancialTransaction;
 import br.com.renanlabs.mvc.financialtransactionchecker.model.FinancialTransactionImport;
+import br.com.renanlabs.mvc.financialtransactionchecker.model.User;
 import br.com.renanlabs.mvc.financialtransactionchecker.repository.FinancialTransactionImportRepository;
+import br.com.renanlabs.mvc.financialtransactionchecker.repository.UserRepository;
 
 @Service
 public class FinancialTransactionImportService {
 	
 	@Autowired
 	private FinancialTransactionImportRepository transactionImportRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 
 	@Autowired
@@ -44,11 +50,19 @@ public class FinancialTransactionImportService {
 	    //id not, initialize importation routine
 	    tb.build();
 	    
-	    FinancialTransactionImport newFinancialTransactionImportOfDay = save(tb.getFinancialTransactionImport());
+	    
+	    //get current user
+	    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+	    User user = userRepository.findByUsername(username);
+	    
+	    //creating financial transaction import and setting the current user
+	    FinancialTransactionImport newFinancialTransactionImportOfDay = tb.getFinancialTransactionImport();
+	    newFinancialTransactionImportOfDay.setUser(user);
+	    newFinancialTransactionImportOfDay = save(newFinancialTransactionImportOfDay);
 	   
 	    for(FinancialTransaction financialTransaction : tb.getValidFinancialTransactions()) {
 	 	   financialTransaction.setFinancialTransactionImport(newFinancialTransactionImportOfDay);
-	 	   financialTransactionService.save(financialTransaction);
+	 	   financialTransactionService.save(financialTransaction); 
 	    }
 	}
     
@@ -63,6 +77,10 @@ public class FinancialTransactionImportService {
 	
 	public List<FinancialTransactionImport> findAll(){
 		return transactionImportRepository.findAll();
+	}
+	
+	public List<FinancialTransactionImport> findAllByUser(String username){
+		return transactionImportRepository.findAllByUser(username);
 	}
 	
 	public FinancialTransactionImport findByTransactionDate(LocalDate date) {

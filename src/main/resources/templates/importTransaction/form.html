@@ -27,6 +27,7 @@
 	        <tr>
 	            <th scope="col"> Transaction Date </th>
 	            <th scope="col"> Import Date </th>
+	            <th scope="col"> Actions </th>
 	        </tr>
 		    </thead>
 		    <tbody>
@@ -36,6 +37,7 @@
 		        <tr  th:each="financialTransactionImport : ${financialTransactionImports}">
 		            <td><span th:text="${#temporals.format(financialTransactionImport.transactionDate, 'dd/MM/yyyy')}"> Transaction Date </span></td>
 		            <td><span th:text="${#temporals.format(financialTransactionImport.date, 'dd/MM/yyyy - HH:mm:ss')}"> Import Date </span></td>
+		        	<td><a th:href="@{/carteira/formulario/editar/{id}(id=${carteira.id})}">Detail</a></td>
 		        </tr>
 		    </tbody>
 		</table>
